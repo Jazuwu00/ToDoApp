@@ -4,7 +4,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import Toast from 'react-native-toast-message';
 
@@ -20,28 +20,34 @@ export default function TabLayout() {
   const [fontsLoaded, fontError] = useFonts({
     GeistPixel: require('../../assets/fonts/GeistPixel-Regular-VariableFont_ELSH.ttf'),
   });
+  const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    const timer = setTimeout(() => setTimedOut(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded || fontError || timedOut) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [fontsLoaded, fontError, timedOut]);
 
-  if (!fontsLoaded && !fontError) {
+  if (!fontsLoaded && !fontError && !timedOut) {
     return null;
   }
 
   return (
-    
+
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
-        <Stack   screenOptions={{
-          headerStyle: { backgroundColor: theme.backgroundElement },
-          headerTintColor: theme.text,
-          headerShadowVisible: false,
-        }}>
+      <Stack screenOptions={{
+        headerStyle: { backgroundColor: theme.backgroundElement },
+        headerTintColor: theme.text,
+        headerShadowVisible: false,
+      }}>
         <Stack.Screen name="tabs" options={{ headerShown: false }} />
-        <Stack.Screen name="DetailTodo"  options={{ title: 'Detalle' }} />
+        <Stack.Screen name="DetailTodo" options={{ title: 'Detalle' }} />
       </Stack>
       <Toast config={toastConfig} />
     </ThemeProvider>
