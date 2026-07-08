@@ -46,7 +46,7 @@ export default function DetailTodo() {
       ErrorToast('ha ocurrido un error')
     } finally {
       SuccessToast('Actualizado con exito!')
-      router.push({ pathname: '/tabs' });
+      router.push({ pathname: '/' });
     }
   }
   return (

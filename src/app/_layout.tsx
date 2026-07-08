@@ -45,7 +45,7 @@ export default function TabLayout() {
         headerTintColor: theme.text,
         headerShadowVisible: false,
       }}>
-        <Stack.Screen name="tabs" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="DetailTodo" options={{ title: 'Detalle' }} />
       </Stack>
       <Toast config={toastConfig} />
