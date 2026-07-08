@@ -7,6 +7,22 @@ import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import Toast from 'react-native-toast-message';
 
+// @ts-ignore
+const originalHandler = global.ErrorUtils?.getGlobalHandler?.();
+// @ts-ignore
+global.ErrorUtils?.setGlobalHandler?.((error: any, isFatal: any) => {
+  console.log('GLOBAL_ERROR_CAUGHT', isFatal, error?.message, error?.stack);
+  if (originalHandler) originalHandler(error, isFatal);
+});
+
+console.log('LOG_0: error handler instalado');
+const rejectionTracking = require('promise/setimmediate/rejection-tracking');
+rejectionTracking.enable({
+  allRejections: true,
+  onUnhandled: (id: any, error: any) => {
+    console.log('UNHANDLED_REJECTION', error?.message, error?.stack);
+  },
+});
 console.log('LOG_1: modulo _layout.tsx evaluado');
 
 SplashScreen.preventAutoHideAsync();
