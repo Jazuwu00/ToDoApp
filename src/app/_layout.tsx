@@ -1,5 +1,4 @@
 import { CustomErrorToast, CustomSuccessToast } from '@/components/CustomToast';
-import { AnimatedSplashOverlay } from '@/components/icon';
 import { useTheme } from '@/hooks/use-theme';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
@@ -40,7 +39,7 @@ export default function TabLayout() {
   return (
 
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
+      {/* <AnimatedSplashOverlay /> */}
       <Stack screenOptions={{
         headerStyle: { backgroundColor: theme.backgroundElement },
         headerTintColor: theme.text,
