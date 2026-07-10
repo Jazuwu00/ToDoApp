@@ -8,7 +8,7 @@ import { ThemedPicker } from '@/components/ui/Picker';
 import ErrorToast from '@/components/ui/toast/ErrorToast';
 import SuccessToast from '@/components/ui/toast/SuccessToast';
 import { MaxContentWidth, Spacing, themePadding } from '@/constants/theme';
-import { useTodos } from '@/hooks/useTodos';
+import { useTodos } from '@/context/TodoContext';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailTodo() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { todos, updateTodo, refresh, todoById, removeTodo } = useTodos();
+  const { updateTodo, refresh, todoById, removeTodo } = useTodos();
   const [todo, setTodo] = useState<Todo | null>(null);
   const [title, setTitle] = useState<string>(todo?.title ?? '');
   const [description, setDescription] = useState<string>(todo?.description ?? '');
@@ -37,7 +37,7 @@ export default function DetailTodo() {
   }, [id]);
 
   if (!todo) return <ThemedText>No se encontró la tarea</ThemedText>;
-  const updateNewTodo = async () => {
+  const handleUpdateTodo = async () => {
     try {
       await updateTodo({ ...todo, title: title, description: description, priority: priority, completed: complete })
       await refresh();
@@ -49,6 +49,19 @@ export default function DetailTodo() {
       router.push({ pathname: '/' });
     }
   }
+    const handleDeleteTodo = async () => {
+    try {
+      await removeTodo(todo.id)
+      await refresh();
+    } catch (error) {
+      console.log(error)
+      ErrorToast('ha ocurrido un error')
+    } finally {
+      SuccessToast('Borrado con exito!')
+      router.push({ pathname: '/' });
+    }
+  }
+
   return (
      <ThemedView style={{flex:1}}>
     <SafeAreaView style={styles.safeArea}>
@@ -62,8 +75,8 @@ export default function DetailTodo() {
 
         </View>
         <View style={{ gap: themePadding.md }}>
-          <Button title={'Guardar'} action={() => { updateNewTodo() }} type={'primary'} size={'large'} />
-          <Button title={'Borrar'} action={() => { removeTodo(todo.id) }} type={'danger'} size={'large'} />
+          <Button title={'Guardar'} action={() => { handleUpdateTodo() }} type={'primary'} size={'large'} />
+          <Button title={'Borrar'} action={() => { handleDeleteTodo() }} type={'danger'} size={'large'} />
         </View>
       </ThemedView>
 

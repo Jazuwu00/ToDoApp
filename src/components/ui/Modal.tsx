@@ -1,87 +1,145 @@
+import { ReactNode } from 'react';
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableWithoutFeedback,
+    View,
+} from 'react-native';
+
 import { themePadding } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { ReactNode } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
 import { Button } from './button';
+
 type ModalProps = {
-    isVisible: boolean;
-    onClose: () => void;
-    onAccept: () => void;
-    title?: string;
-    children?: ReactNode
-    subtitle?: string;
-
+  isVisible: boolean;
+  onClose: () => void;
+  onAccept: () => void;
+  title?: string;
+  subtitle?: string;
+  children?: ReactNode;
+  type?: 'default' | 'danger';
 };
-function ModalUi({ isVisible, onClose, title, subtitle, children, onAccept }: ModalProps) {
-    const styles = useStyles();
-    return (
-        <Modal
-        
-            visible={isVisible}
-            animationType="fade"
-            navigationBarTranslucent
-            statusBarTranslucent
-            onRequestClose={onClose}
-            transparent
-        >
-            <View
-                style={styles.overlay}
-               >
-                <View
-                    style={styles.container}>
-                        <View style={{gap:themePadding.sm}}>{title && <Text style={styles.text}>{title}</Text>}
-                    {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}</View>
-                   
-                    {children}
-                    <View style={styles.buttonContainer}>
-                        {onClose && <Button type='danger' size='small' title="Cancelar" action={onClose} />}
-                        {onAccept && <Button type='secondary' size='small' title="Aceptar" action={onAccept} />}
-                    </View>
-                </View>
-            </View>
-        </Modal>
 
-    )
+export default function ModalUi({
+  isVisible,
+  onClose,
+  onAccept,
+  title,
+  subtitle,
+  children,
+  type = 'default',
+}: ModalProps) {
+  const styles = useStyles();
+
+  return (
+    <Modal
+      visible={isVisible}
+      transparent
+      animationType="fade"
+      presentationStyle="overFullScreen"
+      statusBarTranslucent
+      navigationBarTranslucent
+      onRequestClose={onClose}
+    >
+      <KeyboardAvoidingView
+        style={styles.overlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.overlay}>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.scrollContent}
+            >
+              <View style={styles.container}>
+                {(title || subtitle) && (
+                  <View style={styles.header}>
+                    {title && <Text style={styles.title}>{title}</Text>}
+
+                    {subtitle && (
+                      <Text style={styles.subtitle}>{subtitle}</Text>
+                    )}
+                  </View>
+                )}
+
+                {children}
+
+                <View style={styles.buttons}>
+                  <Button
+                    title="Cancelar"
+                    size="small"
+                    type={type === 'danger' ? 'secondary' : 'danger'}
+                    action={onClose}
+                  />
+
+                  <Button
+                    title="Aceptar"
+                    size="small"
+                    type={type === 'danger' ? 'danger' : 'secondary'}
+                    action={onAccept}
+                  />
+                </View>
+              </View>
+            </ScrollView>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
 }
 
-export default ModalUi
 function useStyles() {
-    const theme = useTheme();
+  const theme = useTheme();
 
+  return StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: theme.modalBackground,
+    },
 
-    return StyleSheet.create({
-        text: {
-            fontSize: 20,
-            textAlign: 'center',
-            fontWeight: '500',
-            color: theme.text,
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      padding: themePadding.lg,
+    },
 
-        },
-        subtitle: {
-            fontSize: 14,
-            textAlign: 'center',
-            fontWeight: '500',
-            color: theme.text,
-        },
-        buttonContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 16,
-        },
-        container: {
-            borderRadius: 8,
-            width: '90%',
-            backgroundColor: theme.backgroundElement,
-            padding: themePadding.xl,
-            gap: themePadding.xl
-        },
-        overlay: {
-            backgroundColor: theme.modalBackground,
-            color: theme.text,
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
+    container: {
+      width: '100%',
+      maxWidth: 420,
+      borderRadius: 16,
+      backgroundColor: theme.backgroundElement,
+      padding: themePadding.xl,
+      gap: themePadding.xl,
+    },
 
-        }
-    })
+    header: {
+      gap: themePadding.sm,
+    },
+
+    title: {
+      fontSize: 20,
+      fontWeight: '600',
+      color: theme.text,
+      textAlign: 'center',
+    },
+
+    subtitle: {
+      fontSize: 14,
+      color: theme.text,
+      textAlign: 'center',
+    },
+
+    buttons: {
+      flexDirection: 'row',
+      justifyContent:'center',
+      gap: themePadding.md,
+    },
+  });
 }

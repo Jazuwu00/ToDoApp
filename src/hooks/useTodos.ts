@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createTodo, deleteTodo, editTodo, getTodoById, getTodos } from "./todoStorage";
+import { createTodo, deleteData, deleteTodo, editTodo, getTodoById, getTodos } from "./todoStorage";
 
 export function useTodos() {
 
@@ -27,6 +27,10 @@ export function useTodos() {
         await deleteTodo(id);
         await refresh();
     };
+      const deleteAllTodos = async () => {
+        await deleteData();
+        await refresh();
+    };
 
     useEffect(() => {
         refresh();
@@ -36,6 +40,7 @@ export function useTodos() {
         todos,
         todoById,
         addTodo,
+        deleteAllTodos,
         updateTodo,
         removeTodo,
         refresh,

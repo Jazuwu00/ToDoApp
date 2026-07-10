@@ -82,5 +82,6 @@ export const deleteTodo = async (id: string) => {
 //eliminar todo
 
 export const deleteData =async()=>{
-  await AsyncStorage.clear();
+  await AsyncStorage.removeItem(TODOS_KEY);
+
 }

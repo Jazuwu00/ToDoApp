@@ -1,10 +1,12 @@
 import { CustomErrorToast, CustomSuccessToast } from '@/components/CustomToast';
+import { TodoProvider } from '@/context/TodoContext';
 import { useTheme } from '@/hooks/use-theme';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
 
@@ -37,18 +39,22 @@ export default function TabLayout() {
   }
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
 
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      {/* <AnimatedSplashOverlay /> */}
-      <Stack screenOptions={{
-        headerStyle: { backgroundColor: theme.backgroundElement },
-        headerTintColor: theme.text,
-        headerShadowVisible: false,
-      }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="DetailTodo" options={{ title: 'Detalle' }} />
-      </Stack>
-      <Toast config={toastConfig} />
-    </ThemeProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <TodoProvider>
+          {/* <AnimatedSplashOverlay /> */}
+          <Stack screenOptions={{
+            headerStyle: { backgroundColor: theme.backgroundElement },
+            headerTintColor: theme.text,
+            headerShadowVisible: false,
+          }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="DetailTodo" options={{ title: 'Detalle' }} />
+          </Stack>
+        </TodoProvider>
+        <Toast config={toastConfig} />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,48 +8,130 @@ import { ThemedView } from '@/components/themed-view';
 import { Button } from '@/components/ui/button';
 import ModalUi from '@/components/ui/Modal';
 import ErrorToast from '@/components/ui/toast/ErrorToast';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { deleteData } from '@/hooks/todoStorage';
-import { useTodos } from '@/hooks/useTodos';
+import {
+  BottomTabInset,
+  MaxContentWidth,
+  Spacing,
+} from '@/constants/theme';
+import { useTodos } from '@/context/TodoContext';
 import { useUserOptions } from '@/hooks/useUserOptions';
-import { useState } from 'react';
+
 
 export default function TabTwoScreen() {
-  const { refresh } = useTodos();
-  const { setDataUser, refresh: refreshUser, userData,deleteDataUser } = useUserOptions()
-  const [name, setName] = useState<string | undefined>(userData?.name)
-  const [lastName, setLastName] = useState<string | undefined>(userData?.lastName)
+  const { deleteAllTodos, refresh: refreshTodos
+  } = useTodos();
 
-  const [modalData, setModaData] = useState(false)
-  const deleteTodos = async () => {
-    await deleteData()
-    await refresh()
-  }
-  const saveDataUser = async () => {
-    if (!name || !lastName) {
-      return ErrorToast('Por favor, completa todos los campos!')
+  const {
+    userData,
+    setDataUser,
+    deleteDataUser,
+    refresh: refreshUser
+  } = useUserOptions();
+
+  const [name, setName] = useState(userData?.name ?? '');
+  const [lastName, setLastName] = useState(userData?.lastName ?? '');
+
+  const [isUserModalVisible, setIsUserModalVisible] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<{
+    title: string;
+    action: () => Promise<void>;
+  } | null>(null);
+
+  const saveUser = async () => {
+    if (!name.trim() || !lastName.trim()) {
+      return ErrorToast('Por favor, completa todos los campos.');
     }
-    await setDataUser({ name: name, lastName: lastName })
-    setModaData(false)
-  }
-  const deleteUser=async ()=>{
-    await deleteDataUser()
-  }
+
+    await setDataUser({
+      name: name.trim(),
+      lastName: lastName.trim(),
+    });
+
+    setIsUserModalVisible(false);
+  };
+  
+ useEffect(() => {
+  setName(userData?.name ?? '');
+  setLastName(userData?.lastName ?? '');
+}, [userData,isUserModalVisible]);
+  
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ThemedText type="title" style={styles.title}>
-          {`Hola, ${ userData?.name ? userData.name : 'usuario' } !`}
+          Hola, {userData?.name ?? 'usuario'}!
         </ThemedText>
-        <Button type='primary' size='large' title="Modificar mis datos" action={() => setModaData(true)} />
-        <Button type="danger" size='large' title="Borrar mis datos" action={() => deleteUser()} />
 
-        <Button type="danger" size='large' title="Borrar todas las tareas" action={() => deleteTodos()} />
-        <ModalUi isVisible={modalData} title='Mis datos' onClose={() => { setModaData(false) }} onAccept={() => { saveDataUser() }}>
-          <ThemedTextInput title={'Nombre'} value={name} placeholder='Mi nombre es..' onChangeText={setName} />
-          <ThemedTextInput title={'Apellido'} value={lastName} placeholder='Mi apellido es..' onChangeText={setLastName} />
+        <Button
+          type="primary"
+          size="large"
+          title="Modificar mis datos"
+          action={() => setIsUserModalVisible(true)}
+        />
 
+        <Button
+          type="danger"
+          size="large"
+          title="Borrar mis datos"
+          action={() => setConfirmModal({
+            title: '¿Eliminar tus datos?',
+            action: deleteDataUser ,
+          })
+          }
+        />
+
+        <Button
+          type="danger"
+          size="large"
+          title="Borrar todas las tareas"
+          action={() => {
+            setConfirmModal({
+              title: '¿Eliminar todas las tareas?',
+              action: deleteAllTodos,
+            })
+          }}
+        />
+        <Button
+          disabled
+          size="large"
+          title="Cambiar idioma"
+          action={() => {
+            
+          }}
+        />
+
+        <ModalUi
+          isVisible={isUserModalVisible}
+          title="Mis datos"
+          onClose={() => {setIsUserModalVisible(false);}}
+          onAccept={saveUser}
+        >
+          <ThemedTextInput
+            title="Nombre"
+            value={name}
+            placeholder="Mi nombre es..."
+            onChangeText={setName}
+          />
+
+          <ThemedTextInput
+            title="Apellido"
+            value={lastName}
+            placeholder="Mi apellido es..."
+            onChangeText={setLastName}
+          />
         </ModalUi>
+
+        <ModalUi
+          type="danger"
+          isVisible={confirmModal !== null}
+          title={
+            confirmModal?.title
+          }
+          onAccept={async () => {
+            await confirmModal?.action();
+            setConfirmModal(null);
+          }} onClose={() => setConfirmModal(null)}
+        />
       </SafeAreaView>
     </ThemedView>
   );
@@ -57,22 +140,21 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   safeArea: {
     flex: 1,
+    maxWidth: MaxContentWidth,
     paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
     paddingVertical: Spacing.four,
     paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    gap: Spacing.four,
   },
   title: {
     textAlign: 'center',
     fontSize: 30,
     fontWeight: '600',
     lineHeight: 52,
-
   },
 });

@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
+        paddingHorizontal: Spacing.four,
+
   },
   pressedHeading: {
     opacity: 0.7,
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   content: {
     marginTop: Spacing.three,
