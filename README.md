@@ -1,56 +1,72 @@
-# Welcome to your Expo app 👋
+# ✅ Todo App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A task management mobile application developed for Android using **React Native** and **TypeScript**.
 
-## Get started
+The application allows users to create, edit, complete, and organize tasks in a simple way, featuring a modern interface focused on user experience and efficient application state management.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 📱 Screenshots
 
-2. Start the app
+<p align="center">
+   <img width="250" alt="home" src="https://github.com/user-attachments/assets/e805edb4-9101-44ab-b1ed-ea18d54dc03d" />
+   <img width="250" alt="create" src="https://github.com/user-attachments/assets/b5bdebe3-2295-4709-86a2-8b8b98a96449" />
+   <img width="250" alt="home2" src="https://github.com/user-attachments/assets/5b18cb35-0f8d-41d4-bc91-7fd89f00287b" />
+   <img width="250" alt="check" src="https://github.com/user-attachments/assets/4f2a376c-55ff-4988-80fc-d3717ce285ca" />
+   <img width="250" alt="delete" src="https://github.com/user-attachments/assets/7b712c5d-b2b3-47b2-a77f-4cd35781701e" />
+   <img width="250" alt="settings" src="https://github.com/user-attachments/assets/a8636735-a251-4ab2-ab1d-ee1d96dafd21" />
+</p>
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## ✨ Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- ✅ Create new tasks
+- ✏️ Edit existing tasks
+- 🗑️ Delete tasks
+- ☑️ Mark tasks as completed
+- 📋 Separate pending and completed tasks
+- 🔍 Simple task organization
+- 🌙 Dark/light theme support
+- 💾 Local data persistence
+- 🌎 Language switching (in development)
+- 📱 Android optimized design (currently)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🛠️ Technologies Used
 
-When you're ready, run:
+### Mobile Frontend
 
-```bash
-npm run reset-project
-```
+- React Native
+- TypeScript
+- Expo
+- React Navigation / Expo Router
+- React Hooks
+- AsyncStorage for local data persistence
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### UI & Styling
 
-### Other setup steps
+- Reusable components
+- Responsive design
+- Custom theme system
+- Custom SVG icons
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Tools
 
-## Learn more
+- Git
+- GitHub
+- ESLint
+- Prettier
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📌 Future Improvements
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Backend synchronization
+- User authentication
+- Task reminder notifications
+- Categories and tags
+- Drag & Drop task organization
+- Productivity statistics
+- Language switching
