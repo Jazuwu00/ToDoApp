@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "To do app",
-    "slug": "TodoApp",
+   "name": "To do",
+    "slug": "todo-app",
     "version": "1.0.0",
     "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "To do",
+    "scheme": "todoapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

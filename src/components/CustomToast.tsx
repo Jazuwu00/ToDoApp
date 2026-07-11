@@ -51,7 +51,7 @@ function useStyles() {
         container: {
             backgroundColor: theme.modalContentBackground,
             paddingVertical: 4,
-            paddingHorizontal: 4,
+            paddingHorizontal: 10,
             marginVertical: themePadding.xs,
             width: '90%',
             borderRadius: 12,

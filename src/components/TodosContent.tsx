@@ -1,5 +1,6 @@
 import { Spacing } from '@/constants/theme';
 import { useTodos } from '@/context/TodoContext';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 import { ThemedView } from './themed-view';
 import { Collapsible } from './ui/collapsible';
@@ -7,7 +8,7 @@ import SwipeableRow from './ui/SwipeableRow';
 
 function TodosContent() {
     const { todos, updateTodo, removeTodo } = useTodos();
-
+    const {t}=useTranslation()
     const todosCompleted = todos.filter((t) => t.completed);
     const todosOnGoing = todos.filter((t) => !t.completed);
     const importantTodos = todos.filter((t) => t.priority);
@@ -26,7 +27,7 @@ function TodosContent() {
 
     return (
         <ThemedView style={styles.sectionsWrapper}>
-            <Collapsible title={`Favoritos (${importantTodos.length})`}>
+            <Collapsible title={`${t('favorite')} (${importantTodos.length})`}>
                 {importantTodos.map((todo: Todo) => (
                     <SwipeableRow
                         key={todo.id}
@@ -38,7 +39,7 @@ function TodosContent() {
 
                 ))}
             </Collapsible>
-            <Collapsible title={`En curso (${todosOnGoing.length})`}>
+            <Collapsible title={`${t('onGoing')} (${todosOnGoing.length})`}>
                 {todosOnGoing.map((todo: Todo) => (
                     <SwipeableRow
                         todo={todo}
@@ -49,7 +50,7 @@ function TodosContent() {
                     />
                 ))}
             </Collapsible>
-            <Collapsible title={`Completados (${todosCompleted.length})`}>
+            <Collapsible title={`${t('completed')} (${todosCompleted.length})`}>
                 {todosCompleted.map((todo: Todo) => (
                     <SwipeableRow
                         todo={todo}

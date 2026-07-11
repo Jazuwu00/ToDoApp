@@ -5,10 +5,12 @@ import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
-
+import '../config/i18n';
+import i18n from '../config/i18n';
 
 SplashScreen.preventAutoHideAsync();
 const toastConfig = {
@@ -17,6 +19,7 @@ const toastConfig = {
 };
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const {t}=useTranslation()
   const theme = useTheme()
   const [fontsLoaded, fontError] = useFonts({
     GeistPixel: require('../../assets/fonts/GeistPixel-Regular-VariableFont_ELSH.ttf'),
@@ -42,6 +45,7 @@ export default function TabLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
 
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <I18nextProvider i18n={i18n}>
         <TodoProvider>
           {/* <AnimatedSplashOverlay /> */}
           <Stack screenOptions={{
@@ -50,9 +54,10 @@ export default function TabLayout() {
             headerShadowVisible: false,
           }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="DetailTodo" options={{ title: 'Detalle' }} />
+            <Stack.Screen name="DetailTodo" options={{ title: t('detail') }} />
           </Stack>
         </TodoProvider>
+        </I18nextProvider>
         <Toast config={toastConfig} />
       </ThemeProvider>
     </GestureHandlerRootView>

@@ -1,11 +1,12 @@
 import { Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { Picker } from '@react-native-picker/picker';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 export function ThemedPicker({ value, onChange, style }: { value: boolean; onChange: (e: any) => void; style?: any }) {
   const theme = useTheme();
   const styles = useStyles();
-
+  const {t}= useTranslation()
   return (
     <View style={styles.pickerContainer}>
       <Picker
@@ -15,8 +16,8 @@ export function ThemedPicker({ value, onChange, style }: { value: boolean; onCha
         dropdownIconColor={'white'}
         mode='dropdown'
       >
-        <Picker.Item style={styles.text} label="En curso" value={false} />
-        <Picker.Item style={styles.text} label="Completado" value={true} />
+        <Picker.Item style={styles.text} label={t('onGoing')} value={false} />
+        <Picker.Item style={styles.text} label={t('completed')}value={true} />
       </Picker>
     </View>
   );

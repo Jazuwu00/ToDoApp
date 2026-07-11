@@ -1,13 +1,14 @@
 import { Spacing } from '@/constants/theme';
 import { useTodos } from '@/context/TodoContext';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { Icon } from './icon';
 import { ThemedText } from './themed-text';
 import { ThemedTextInput } from './themed-textInput';
 import { ThemedView } from './themed-view';
 import { Button } from './ui/button';
-import ModalUi from './ui/Modal';
+import ModalUi from './ui/modals/Modal';
 import ErrorToast from './ui/toast/ErrorToast';
 import SuccessToast from './ui/toast/SuccessToast';
 
@@ -16,23 +17,23 @@ function HeroContent() {
     const [showAddTodo, setShowAddTodo] = useState<boolean>(false)
     const [title, setTitle] = useState<string>('')
     const [description, setDescription] = useState<string>('')
-
+    const { t } = useTranslation()
 
     const handleAddTodo = async () => {
         try {
             if (!title || !description) {
-                return ErrorToast('Por favor, completa todos los campos!')
+                return ErrorToast(t('fillFields'))
             }
             addTodo({ id: Date.now().toString(), title, description, completed: false, priority: false, createdAt: Date.now() });
             setTitle('');
             setDescription('');
             setShowAddTodo(false);
-            SuccessToast('Creado con exito!')
+            SuccessToast(t('successfullyCreated'))
         } catch (error) {
             console.log(error)
         } finally {
             await refresh();
-            
+
         }
     }
 
@@ -41,21 +42,21 @@ function HeroContent() {
             <ThemedView style={styles.heroSection}>
                 <Icon />
                 <ThemedText type="title" style={styles.title}>
-                    To do App
+                    {t('mainTitle')}
                 </ThemedText>
             </ThemedView>
             <ThemedView style={styles.titleContainer}>
                 <ThemedText style={styles.centerText} >
-                    Crea, edita o elimina tus tareas.{'\n'} Puedes modificar su prioridad tambien!!
+                    {t('mainSubtitle')}
                 </ThemedText>
-                <Button type="primary" size='large' title="Agregar tarea" action={() => setShowAddTodo(!showAddTodo)} />
+                <Button type="primary" size='large' title={t('addToDoTitle')} action={() => setShowAddTodo(!showAddTodo)} />
 
             </ThemedView>
-            <ModalUi isVisible={showAddTodo} title='Crea tu tarea' subtitle='Añade titulo y descripción ' onAccept={() => { handleAddTodo() }} onClose={() => { setShowAddTodo(false); setDescription(''); setTitle('') }}>
+            <ModalUi isVisible={showAddTodo} title={t('addToDoTitle')}  subtitle={t('addToDoSubtitle')}  onAccept={() => { handleAddTodo() }} onClose={() => { setShowAddTodo(false); setDescription(''); setTitle('') }}>
 
                 <View style={{ gap: 20 }}>
-                    <ThemedTextInput title='Título' placeholder="Título *" value={title} onChangeText={setTitle} />
-                    <ThemedTextInput title='Descripción' placeholder="Descripción *" value={description} onChangeText={setDescription} />
+                    <ThemedTextInput title='Título' placeholder={t('title')} value={title} onChangeText={setTitle} />
+                    <ThemedTextInput title='Descripción' placeholder={t('description')} value={description} onChangeText={setDescription} />
 
                 </View>
             </ModalUi>

@@ -22,7 +22,7 @@ export function Button({
 
   const backgroundColors: Record<'primary' | 'secondary' | 'danger', string> = {
     primary: theme.backgroundElement,
-    secondary: theme.info,
+    secondary: theme.background,
     danger: theme.danger,
   };
 

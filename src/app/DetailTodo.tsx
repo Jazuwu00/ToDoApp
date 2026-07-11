@@ -11,11 +11,14 @@ import { MaxContentWidth, Spacing, themePadding } from '@/constants/theme';
 import { useTodos } from '@/context/TodoContext';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailTodo() {
   const { id } = useLocalSearchParams<{ id: string }>();
+      const { t } = useTranslation()
+  
   const { updateTodo, refresh, todoById, removeTodo } = useTodos();
   const [todo, setTodo] = useState<Todo | null>(null);
   const [title, setTitle] = useState<string>(todo?.title ?? '');
@@ -36,16 +39,16 @@ export default function DetailTodo() {
     load();
   }, [id]);
 
-  if (!todo) return <ThemedText>No se encontró la tarea</ThemedText>;
+  if (!todo) return <ThemedText>{t('taskNotFound')}</ThemedText>;
   const handleUpdateTodo = async () => {
     try {
       await updateTodo({ ...todo, title: title, description: description, priority: priority, completed: complete })
       await refresh();
     } catch (error) {
       console.log(error)
-      ErrorToast('ha ocurrido un error')
+       ErrorToast(t('ErrorMessage'))
     } finally {
-      SuccessToast('Actualizado con exito!')
+      SuccessToast(t('successUpdate'))
       router.push({ pathname: '/' });
     }
   }
@@ -55,9 +58,9 @@ export default function DetailTodo() {
       await refresh();
     } catch (error) {
       console.log(error)
-      ErrorToast('ha ocurrido un error')
+      ErrorToast(t('ErrorMessage'))
     } finally {
-      SuccessToast('Borrado con exito!')
+      SuccessToast(t('successDelete'))
       router.push({ pathname: '/' });
     }
   }
@@ -68,15 +71,15 @@ export default function DetailTodo() {
       <ThemedView style={styles.container}>
 
         <View style={{ gap: themePadding.xl }}>
-          <ThemedTextInput title='Título' placeholder="Título *" value={title} onChangeText={setTitle} />
-          <ThemedTextInput lines={4} title='Descripción' placeholder="Descripción *" value={description} onChangeText={setDescription} />
+          <ThemedTextInput title={t('title')} placeholder={t('title')} value={title} onChangeText={setTitle} />
+          <ThemedTextInput lines={4} title={t('description')} placeholder={t('description')} value={description} onChangeText={setDescription} />
           <ThemedPicker value={complete} onChange={setComplete} />
-          <ThemedRadioButton title='Marcar como prioridad' value={priority} onPress={() => setPriority(!priority)} />
+          <ThemedRadioButton title={t('markFavorite')} value={priority} onPress={() => setPriority(!priority)} />
 
         </View>
         <View style={{ gap: themePadding.md }}>
-          <Button title={'Guardar'} action={() => { handleUpdateTodo() }} type={'primary'} size={'large'} />
-          <Button title={'Borrar'} action={() => { handleDeleteTodo() }} type={'danger'} size={'large'} />
+          <Button title={t('save')} action={() => { handleUpdateTodo() }} type={'primary'} size={'large'} />
+          <Button title={t('delete')} action={() => { handleDeleteTodo() }} type={'danger'} size={'large'} />
         </View>
       </ThemedView>
 

@@ -1,19 +1,20 @@
 import { ReactNode } from 'react';
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableWithoutFeedback,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 
 import { themePadding } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { Button } from './button';
+import { useTranslation } from 'react-i18next';
+import { Button } from '../button';
 
 type ModalProps = {
   isVisible: boolean;
@@ -35,6 +36,7 @@ export default function ModalUi({
   type = 'default',
 }: ModalProps) {
   const styles = useStyles();
+  const { t } = useTranslation()
 
   return (
     <Modal
@@ -70,18 +72,17 @@ export default function ModalUi({
                 {children}
 
                 <View style={styles.buttons}>
-                  <Button
-                    title="Cancelar"
-                    size="small"
-                    type={type === 'danger' ? 'secondary' : 'danger'}
-                    action={onClose}
-                  />
-
-                  <Button
-                    title="Aceptar"
-                    size="small"
+                    <Button
+                    title={t('accept')}
+                    size='large'
                     type={type === 'danger' ? 'danger' : 'secondary'}
                     action={onAccept}
+                  />
+                  <Button
+                    title={t('cancel')}
+                    size='large'
+                    type={type === 'danger' ? 'secondary' : 'danger'}
+                    action={onClose}
                   />
                 </View>
               </View>
@@ -137,7 +138,8 @@ function useStyles() {
     },
 
     buttons: {
-      flexDirection: 'row',
+      paddingVertical:themePadding.md,
+      flexDirection: 'column',
       justifyContent:'center',
       gap: themePadding.md,
     },

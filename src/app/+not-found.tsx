@@ -1,15 +1,17 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { MaxContentWidth, Spacing, themePadding } from "@/constants/theme";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function CustomNotFound() {
+  const {t}=useTranslation()
   return (
     <ThemedView style={{flex:1}}>
         <SafeAreaView style={styles.safeArea}>
           <ThemedView style={styles.container}>
-            <ThemedText type='title' style={styles.title}>Not Found</ThemedText>
+            <ThemedText type='title' style={styles.title}>{t('notFound')}</ThemedText>
           </ThemedView>
           </SafeAreaView>
 </ThemedView>  

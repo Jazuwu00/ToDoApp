@@ -6,8 +6,11 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedTextInput } from '@/components/themed-textInput';
 import { ThemedView } from '@/components/themed-view';
 import { Button } from '@/components/ui/button';
-import ModalUi from '@/components/ui/Modal';
+import LanguageModal from '@/components/ui/modals/LanguageModal';
+import ModalUi from '@/components/ui/modals/Modal';
 import ErrorToast from '@/components/ui/toast/ErrorToast';
+import SuccessToast from '@/components/ui/toast/SuccessToast';
+import i18n from '@/config/i18n';
 import {
   BottomTabInset,
   MaxContentWidth,
@@ -15,6 +18,7 @@ import {
 } from '@/constants/theme';
 import { useTodos } from '@/context/TodoContext';
 import { useUserOptions } from '@/hooks/useUserOptions';
+import { useTranslation } from 'react-i18next';
 
 
 export default function TabTwoScreen() {
@@ -27,11 +31,12 @@ export default function TabTwoScreen() {
     deleteDataUser,
     refresh: refreshUser
   } = useUserOptions();
+  const { t } = useTranslation()
 
   const [name, setName] = useState(userData?.name ?? '');
   const [lastName, setLastName] = useState(userData?.lastName ?? '');
-
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false)
   const [confirmModal, setConfirmModal] = useState<{
     title: string;
     action: () => Promise<void>;
@@ -49,33 +54,42 @@ export default function TabTwoScreen() {
 
     setIsUserModalVisible(false);
   };
-  
- useEffect(() => {
-  setName(userData?.name ?? '');
-  setLastName(userData?.lastName ?? '');
-}, [userData,isUserModalVisible]);
-  
+
+  useEffect(() => {
+    setName(userData?.name ?? '');
+    setLastName(userData?.lastName ?? '');
+  }, [userData, isUserModalVisible]);
+
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ThemedText type="title" style={styles.title}>
-          Hola, {userData?.name ?? 'usuario'}!
+          {t('welcomeUser', { name: name || t('user') })}
         </ThemedText>
-
+        <Button
+          size="large"
+          title={t('changeLanguage')}
+          action={() => {
+            setShowLanguageModal(true)
+          }}
+        />
         <Button
           type="primary"
           size="large"
-          title="Modificar mis datos"
+          title={t('modifyMyData')}
           action={() => setIsUserModalVisible(true)}
         />
 
         <Button
           type="danger"
           size="large"
-          title="Borrar mis datos"
+          title={t('deleteMyData')}
           action={() => setConfirmModal({
-            title: '¿Eliminar tus datos?',
-            action: deleteDataUser ,
+            title: t('deleteMyDataConfirm'),
+            action: async () => {
+              await deleteDataUser();
+              SuccessToast();
+            },
           })
           }
         />
@@ -83,40 +97,39 @@ export default function TabTwoScreen() {
         <Button
           type="danger"
           size="large"
-          title="Borrar todas las tareas"
+          title={t('deleteAllTodos')}
           action={() => {
             setConfirmModal({
-              title: '¿Eliminar todas las tareas?',
-              action: deleteAllTodos,
+              title: t('deleteTodosConfirm'),
+              action: async () => {
+                await deleteAllTodos();
+                SuccessToast();
+              },
             })
           }}
         />
-        <Button
-          disabled
-          size="large"
-          title="Cambiar idioma"
-          action={() => {
-            
-          }}
-        />
+
+
+
+        <LanguageModal isVisible={showLanguageModal} onClose={() => setShowLanguageModal(false)} />
 
         <ModalUi
           isVisible={isUserModalVisible}
-          title="Mis datos"
-          onClose={() => {setIsUserModalVisible(false);}}
+          title={t('myData')}
+          onClose={() => { setIsUserModalVisible(false); }}
           onAccept={saveUser}
         >
           <ThemedTextInput
-            title="Nombre"
+            title={t('name')}
             value={name}
-            placeholder="Mi nombre es..."
+            placeholder={t('name')}
             onChangeText={setName}
           />
 
           <ThemedTextInput
-            title="Apellido"
+            title={t('lastName')}
             value={lastName}
-            placeholder="Mi apellido es..."
+            placeholder={t('lastName')}
             onChangeText={setLastName}
           />
         </ModalUi>
@@ -136,6 +149,11 @@ export default function TabTwoScreen() {
     </ThemedView>
   );
 }
+
+function changeLanguage(lang: 'es' | 'en') {
+  i18n.changeLanguage(lang)
+}
+
 
 const styles = StyleSheet.create({
   container: {
